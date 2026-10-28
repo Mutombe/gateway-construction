@@ -1,0 +1,72 @@
+<!-- @head title="Projects | Gateway Construction" desc="Explore Gateway Construction projects across Zimbabwe: Medical Specialists Centre, Mazowe Walk Shopping Mall, Quinnington Housing, Zvishavane District Hospital and more." page="projects" -->
+
+<div class="hero-frame">
+  <section class="page-hero">
+    <!-- @nav -->
+    <img src="assets/img/hero/mazowe-03.webp" alt="" fetchpriority="high">
+    <div class="page-hero-body" id="main">
+      <div>
+        <p class="crumbs"><a href="index.html">Home</a> / <span>Projects</span></p>
+        <h1 class="h1" data-split>Our work,<br>on the ground</h1>
+        <p class="lede" data-reveal style="--d:.4s">A selection of completed and active projects, from hospitals and retail centres to homes, schools, roads and factories.</p>
+      </div>
+      <div class="page-hero-glass" data-reveal style="--d:.55s">
+        <b><span data-count="12">12</span></b><span>featured projects on this page</span>
+        <hr><b><span data-count="75">75</span>+</b><span>projects completed since 1992</span>
+      </div>
+    </div>
+  </section>
+</div>
+
+<main>
+  <section class="section">
+    <div class="container">
+      <div class="section-head"><div><span class="tag">Gallery</span><h2 class="h2" data-split>Filter by sector,<br><span class="tone-grad">open any project</span></h2></div>
+        <p class="lede" data-reveal>Every photograph is from a Gateway site. Select a project to see its full gallery, scope and client.</p></div>
+      <div class="filters" data-filters role="group" aria-label="Filter projects by sector"></div>
+      <div class="proj-grid" data-projects="grid"></div>
+    </div>
+  </section>
+
+  <section class="panel panel--ink on-dark section" id="map" data-pattern="contour" data-pattern-pos="tr">
+    <div class="container map-wrap">
+      <div class="map-card" data-reveal="fade"><div data-map style="height:100%"></div></div>
+      <div>
+        <span class="tag">Project map</span>
+        <h2 class="h2" style="margin-top:22px" data-split>Every project,<br><span class="tone-grad">on the map</span></h2>
+        <p class="lede" style="color:rgba(255,255,255,.65);margin:20px 0 28px" data-reveal>Pick a region to see its projects.</p>
+        <ul class="map-list" data-map-list></ul>
+        <p class="map-detail" data-map-detail aria-live="polite"></p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container" style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px" id="sector-chart">
+      <div class="chart-card" data-reveal>
+        <p class="chart-title">Featured projects by sector</p>
+        <p class="chart-sub">Count of the 12 projects shown above</p>
+        <div class="chart" data-chart="sectors"></div>
+        <button class="chart-table-toggle" type="button" aria-expanded="false">Show as table</button>
+        <table class="chart-table" data-chart-table hidden></table>
+      </div>
+      <div class="chart-card" style="display:grid;align-content:space-between;gap:24px;background:var(--green-100);--d:.1s" data-reveal>
+        <div><p class="chart-title">Healthcare, education &amp; housing</p><p class="chart-sub">Projects that serve communities</p></div>
+        <div style="display:flex;align-items:center;gap:28px;flex-wrap:wrap">
+          <div class="meter" data-value="50"><svg viewBox="0 0 180 180" aria-hidden="true"><circle class="bg" cx="90" cy="90" r="78"/><circle class="fg" cx="90" cy="90" r="78"/></svg><b>50%</b></div>
+          <p class="muted" style="max-width:26ch;font-size:.92rem">Hospitals, schools and homes make up half of our featured work.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="cta" aria-label="Start a project">
+    <img src="assets/img/hero/quinnington-04.webp" alt="" loading="lazy">
+    <div class="cta-inner on-dark">
+      <div><span class="tag">Your project next</span><h2 class="h1" style="margin-top:22px" data-split>Let’s add your project<br>to this page</h2>
+        <div class="hero-cta" data-reveal><a class="btn-pair" href="contact.html"><span class="btn">Start a conversation</span><span class="arrow-circle"><i class="ph-duotone ph-arrow-up-right" aria-hidden="true"></i></span></a></div></div>
+    </div>
+  </section>
+</main>
+
+<!-- @footer -->
