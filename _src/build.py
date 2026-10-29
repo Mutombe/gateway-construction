@@ -8,7 +8,7 @@ Placeholders inside a page:
 
 Run from anywhere:  python _src/build.py
 """
-import pathlib, re
+import hashlib, pathlib, re
 
 SRC = pathlib.Path(__file__).parent
 ROOT = SRC.parent
@@ -44,6 +44,9 @@ FOOT = part['footer'] + part['chrome'] + """
 </html>
 """
 
+def version(rel):
+    return hashlib.md5((ROOT / rel).read_bytes()).hexdigest()[:8]
+
 def head(m):
     attrs = dict(re.findall(r'(\w+)="([^"]*)"', m.group(1)))
     return HEAD.format(**attrs)
@@ -52,5 +55,7 @@ for page in sorted((SRC / 'pages').glob('*.html')):
     html = page.read_text(encoding='utf8')
     html = re.sub(r'<!-- @head (.*?) -->', head, html)
     html = html.replace('<!-- @nav -->', part['nav']).replace('<!-- @footer -->', FOOT)
+    # cache-bust local CSS/JS by content, so a deploy never pairs new JS with a CDN-cached old stylesheet
+    html = re.sub(r'(href|src)="(assets/(?:css|js)/[\w.-]+\.(?:css|js))"', lambda m: f'{m[1]}="{m[2]}?v={version(m[2])}"', html)
     (ROOT / page.name).write_text(html, encoding='utf8')
     print('built', page.name)
