@@ -1184,3 +1184,41 @@ section > .logo-scroller { margin-inline: var(--gutter); }
   .hero h1, .page-hero h1 { text-shadow: 0 2px 24px rgba(2,26,14,.45); }
   .hero-sub, .page-hero .lede { text-shadow: 0 1px 12px rgba(2,26,14,.6); }
 }
+
+/* map section: grid children may shrink (the nowrap chip row must never widen the column) */
+.map-wrap > * { min-width: 0; }
+.map-glass .mg-text { min-width: 0; }
+.map-glass .sep { font-style: normal; }
+.map-glass [data-map-count] { flex: none; }
+@media (max-width: 1024px) {
+  .map-wrap { grid-template-columns: minmax(0, 1fr); }
+}
+/* mobile map: its own design. The bar sits under the map, pins are larger,
+   and pin names move to the region list. SVG sizes are in viewBox units (about 0.45x on a phone). */
+@media (max-width: 640px) {
+  .map-card { aspect-ratio: auto; display: flex; flex-direction: column; border-radius: var(--radius-lg); }
+  .map-card [data-map] { height: auto !important; display: flex; flex-direction: column; }
+  .map-card svg { height: auto; margin-bottom: -40px; }
+  .map-card .outline { stroke-width: 5; }
+  .map-card .outline-glow { stroke-width: 18; }
+  .map-card .provinces path { stroke-width: 1.8; stroke-dasharray: 5 6; }
+  .map-card .prov-labels text { font-size: 17px; letter-spacing: .06em; fill: rgba(193,217,206,.5); }
+  .map-card .city text { font-size: 19px; letter-spacing: .02em; fill: rgba(255,255,255,.6); }
+  .map-card .city circle { r: 4.5; }
+  .map-card .mesh line { stroke-width: 1.1; }
+  .map-card .route { stroke-width: 3; stroke-dasharray: 7 9; }
+  .pin text { display: none; }
+  .pin .core { r: 13; stroke-width: 7; }
+  .pin .halo { r: 34; }
+  .pin.is-active .core { r: 16; }
+  .map-glass { position: relative; inset: auto; margin: 0 10px 10px; padding: 12px 14px; font-size: .8rem; }
+  .map-glass .mg-text { display: grid; gap: 2px; }
+  .map-glass .sep { display: none; }
+  .map-glass .mg-note { color: rgba(255,255,255,.62); font-size: .74rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .map-glass [data-map-count] { font-size: .72rem; padding: 4px 10px; border-radius: var(--pill); background: rgba(255,255,255,.1); }
+  .map-wrap { gap: 28px; }
+  .map-list button { grid-template-columns: auto minmax(0, 1fr) auto; gap: 12px; }
+  .map-list small { display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .map-detail { margin-top: 12px; min-height: 0; }
+}
+@media (max-width: 640px) { .map-card .city--minor text { display: none; } }

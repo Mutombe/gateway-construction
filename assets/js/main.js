@@ -259,7 +259,7 @@
   /* ---------- polygonal Zimbabwe map ---------- */
   // Border and provinces: assets/js/zim-geo.js (generated from geoBoundaries / ZIMSTAT)
   const G = window.GW_GEO;
-  const CITIES = [['Bulawayo',28.58,-20.15],['Mutare',32.67,-18.97],['Gweru',29.82,-19.45],['Masvingo',30.83,-20.07],['Kariba',28.8,-16.52],['Victoria Falls',25.84,-17.93],['Chinhoyi',30.2,-17.36],['Hwange',26.5,-18.36]];
+  const CITIES = [['Bulawayo',28.58,-20.15],['Mutare',32.67,-18.97,'end'],['Gweru',29.82,-19.45],['Masvingo',30.83,-20.07],['Kariba',28.8,-16.52],['Victoria Falls',25.84,-17.93,'below'],['Chinhoyi',30.2,-17.36,'end'],['Hwange',26.5,-18.36]];
   const px = (lon, lat) => G ? [G.proj.pad + (lon - G.proj.lon0) * G.proj.kx, G.proj.pad + (G.proj.lat0 - lat) * G.proj.ky] : [0, 0];
   const inside = (x, y, poly) => { let c = false; for (let i = 0, j = poly.length - 1; i < poly.length; j = i++) { const [xi, yi] = poly[i], [xj, yj] = poly[j]; if ((yi > y) !== (yj > y) && x < (xj - xi) * (y - yi) / (yj - yi) + xi) c = !c; } return c; };
   if (G) $$('[data-map]').forEach(host => {
@@ -282,21 +282,23 @@
     const H = px(R.harare.lon, R.harare.lat);
     const curve = (a, b) => { const mx = (a[0] + b[0]) / 2 + (b[1] - a[1]) * .18, my = (a[1] + b[1]) / 2 - (b[0] - a[0]) * .18; return `M${a[0]},${a[1]} Q${mx},${my} ${b[0]},${b[1]}`; };
     const routes = Object.keys(R).filter(k => k !== 'harare').map(k => `<path class="route" d="${curve(H, px(R[k].lon, R[k].lat))}"/>`).join('');
-    const cities = CITIES.map(([n, a, b]) => { const [x, y] = px(a, b); return `<g class="city"><circle cx="${x}" cy="${y}" r="2.5"/><text x="${x + 8}" y="${y + 4}">${n.toUpperCase()}</text></g>`; }).join('');
+    // label side per city keeps names off the pins, the border and province names
+    const cities = CITIES.map(([n, a, b, side]) => { const [x, y] = px(a, b); const [tx, ty, ta] = side === 'end' ? [x - 8, y + 4, 'end'] : side === 'below' ? [x + 4, y + 22, 'start'] : [x + 8, y + 4, 'start']; return `<g class="city${['Hwange', 'Chinhoyi'].includes(n) ? ' city--minor' : ''}"><circle cx="${x}" cy="${y}" r="2.5"/><text x="${tx}" y="${ty}" text-anchor="${ta}">${n.toUpperCase()}</text></g>`; }).join('');
     const pins = Object.entries(R).map(([k, r]) => {
-      const [x, y] = px(r.lon, r.lat), n = P.filter(p => p.region === k).length, left = k === 'mazowe';
+      const [x, y] = px(r.lon, r.lat), n = P.filter(p => p.region === k).length, left = false;
       return `<g class="pin" data-region="${k}" tabindex="0" role="button" aria-label="${esc(r.name)}: ${n} projects"><circle class="halo" cx="${x}" cy="${y}" r="22"/><circle class="core" cx="${x}" cy="${y}" r="8"/>
         <text x="${left ? x - 16 : x + 16}" y="${y - 2}" text-anchor="${left ? 'end' : 'start'}">${esc(r.name)}</text><text class="sub" x="${left ? x - 16 : x + 16}" y="${y + 13}" text-anchor="${left ? 'end' : 'start'}">${n} PROJECT${n > 1 ? 'S' : ''}</text></g>`;
     }).join('');
     const provs = G.provinces.map(p => `<path d="${p.d}"/>`).join('');
-    const provLabels = G.provinces.filter(p => !['Harare', 'Bulawayo'].includes(p.name)).map(p => `<text x="${p.cx}" y="${p.cy}" text-anchor="middle">${esc(p.name.toUpperCase())}</text>`).join('');
+    const NUDGE = { 'Mashonaland East': [18, 52], 'Manicaland': [-16, 66] };  // clear of the Harare pin and Mutare
+    const provLabels = G.provinces.filter(p => !['Harare', 'Bulawayo'].includes(p.name)).map(p => `<text x="${p.cx + (NUDGE[p.name]?.[0] || 0)}" y="${p.cy + (NUDGE[p.name]?.[1] || 0)}" text-anchor="middle">${esc(p.name.toUpperCase())}</text>`).join('');
     host.innerHTML = `<svg viewBox="0 0 ${G.w} ${G.h + 70}" role="img" aria-label="Map of Zimbabwe and its provinces, showing Gateway Construction project locations">
       <path class="land" d="${G.outline}"/>
       <g class="mesh">${L}${dots}</g>
       <g class="provinces">${provs}</g><g class="prov-labels">${provLabels}</g>
       <path class="outline-glow" d="${G.outline}"/><path class="outline" d="${G.outline}"/>
       ${routes}${cities}${pins}</svg>
-      <div class="map-glass"><span><b data-map-name>Harare Metropolitan</b> · <span data-map-note>${esc(R.harare.note)}</span></span><span class="mono" data-map-count></span></div>`;
+      <div class="map-glass"><span class="mg-text"><b data-map-name>Harare Metropolitan</b><i class="sep"> · </i><span class="mg-note" data-map-note>${esc(R.harare.note)}</span></span><span class="mono" data-map-count></span></div>`;
     host.closest('.map-card')?.classList.add('has-map');
     const list = $('[data-map-list]');
     if (list) list.innerHTML = Object.entries(R).map(([k, r], i) => { const n = P.filter(p => p.region === k).length; return `<li><button type="button" data-region="${k}"><span class="n">0${i + 1}</span><span><b>${esc(r.name)}</b><small>${esc(r.note)}</small></span><span class="count">${n}</span></button></li>`; }).join('');
